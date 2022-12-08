@@ -83,3 +83,5 @@ with gw.open(
     )
     plt.show()
 # %%
+sorted(glob('/home/mmann1123/extra_space/Dropbox/Tanzania_data/pry_coefficients/**/**/*.tif'))
+# %%
