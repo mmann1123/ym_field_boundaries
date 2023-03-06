@@ -2,7 +2,7 @@
 import geowombat as gw
 from glob import glob
 import os
-os.chdir('/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/S2_imagery/')
+os.chdir('/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/raw_images_S2')
 files = glob('**/**.tif', recursive=True)
 
 #%%
@@ -23,5 +23,6 @@ for file in files:
             evi = ds.gw.evi()
             evi.gw.save(
             os.path.join(names[0],'evi',names[1]), num_workers=4 )
+            # moved to time_series_vars folder
 
 # %%
