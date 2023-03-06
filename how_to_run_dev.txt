@@ -1,0 +1,3 @@
+hit shift+cmd+p for the command pallet
+
+look for dev container rebuild and reopen container 

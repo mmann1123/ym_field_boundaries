@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "Ubuntu",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mmann1123/cultionet:latest",
+	//"build": {
+	// Path is relataive to the devcontainer.json file.  https://containers.dev/guide/dockerfile
+	//	"dockerfile": "Dockerfile"
+	//},
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/nvidia-cuda:1": {},
+		"ghcr.io/rocker-org/devcontainer-features/miniforge:1": {}
+	},
+	// "image": "mmann1123/cultionet:latest",
+	//	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/app/,type=bind",
+	//	"workspaceFolder": "/usr/app/",
+	"mounts": [
+		"source=${localEnv:HOME}${localEnv:USERPROFILE},target=/mnt,type=bind,consistency=cached"
+		//"source=${localWorkspaceFolder}/app-data,target=/data,type=bind,consistency=cached"
+	]
+	// ,
+	// "build": {
+	// 	"dockerfile": "nameoffile"
+	// }
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "uname -a",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python"
+			]
+		}
+	}
+	// Configure tool-specific properties.
+	// "customizations": {},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

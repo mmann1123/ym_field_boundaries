@@ -1,0 +1,8 @@
+services:
+  pythonapp:
+    build: ./
+    # ports:
+    #   - "8000:5000"
+    volumes:
+      - .:/usr/app/src
+    command: python3
