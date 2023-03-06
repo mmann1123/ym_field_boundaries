@@ -1,10 +1,23 @@
-# aws  linux  
+# Ubuntu Linux
 # AMI Deep learning AMI GPU PyTorch 1.13.1
 # G3 instance but  P3, P3dn, P4d, G5, G4dn also work
 
+# vs code ssh profile 
+Host aws_mann_cultionet
+    HostName something.compute-1.amazonaws.com
+    User ubuntu
+    IdentityFile  
 
-conda config --set auto_activate_base true
-source activate pytorch
+
+# one first setup
+#conda config --set auto_activate_base false
+echo "conda activate pytorch" >> ~/.bashrc
+source ~/.bashrc
+
+# set up git
+git config --global user.name ""
+git config --global  user.email ""
+
 
 sudo apt update -y && \
     sudo apt upgrade -y && \
@@ -67,5 +80,4 @@ git clone https://github.com/jgrss/cultionet.git
 pip install testfixtures
 cd cultionet/tests
 python -m unittest
-
 
