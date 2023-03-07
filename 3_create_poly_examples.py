@@ -1,5 +1,7 @@
 # %% install randombox
-# pip install git+https://github.com/mmann1123/randombox.git
+#!pip install git+https://github.com/mmann1123/randombox.git
+# !git clone https://github.com/mmann1123/randombox.git
+# !pip install -e randombox
 # %%
 from randombox import random_box
 import glob as glob
@@ -18,30 +20,30 @@ directory_list
 for directory in directory_list:
     geo_path = os.path.join(directory, "evi", "2021091.tif")
 
-    num_points = 5
+    num_points = 10
     size = 1000
     squares_gdf = random_box(
         geo_path,
         num_points,
         size,
-        out_path = os.path.join(os.path.dirname(os.getcwd()), 'user_train' )
+        out_dir=os.path.join(os.path.dirname(os.getcwd()), "user_train"),
         name_prefix=directory,
         name_postfix="2022",
         crs="EPSG:3395",
     )
-
+# %%
 # 2022 data polygon labeled at end of crop season so 2023
 
 for directory in directory_list:
     geo_path = os.path.join(directory, "evi", "2021091.tif")
 
-    num_points = 52
+    num_points = 10
     size = 1000
     squares_gdf = random_box(
         geo_path,
         num_points,
         size,
-        out_path = os.path.join(os.path.dirname(os.getcwd()), 'user_train' )
+        out_dir=os.path.join(os.path.dirname(os.getcwd()), "user_train"),
         name_prefix=directory,
         name_postfix="2023",
         crs="EPSG:3395",
