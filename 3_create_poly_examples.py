@@ -7,6 +7,7 @@ from randombox import random_box
 import glob as glob
 import os
 
+# %%
 os.chdir(
     "/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/time_series_vars/"
 )
@@ -36,3 +37,53 @@ for year in ["2022", "2023"]:
 # %%
 
 # %%
+import geopandas as gpd
+from random import randint
+
+# %%
+# read in _poly_ and _grid_ files, export aois as individual geopackages
+os.chdir(
+    "/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/user_train/"
+)
+# get region names
+regions = os.listdir(
+    "/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/time_series_vars/"
+)
+
+in_path = os.path.join(os.getcwd(), "multi_feature_by_region")
+out_path = os.path.join(os.getcwd(), "single_feature_by_id")
+
+# read in _poly_ and _grid_ files, find intersection between individual _grid_ and _poly_, export aois as individual geopackages
+for year in ["2022", "2023"]:
+    for region in regions:
+        grid = gpd.read(os.path.join(in_path, f"{region}_grid_{year}.geojson"))
+        poly = gpd.read(os.path.join(in_path, f"{region}_poly_{year}.geojson"))
+        # iterate through each grid geometry and find intersection with poly
+        for i, row in grid.iterrows():
+            # find intersection
+            intersection = gpd.overlay(poly, row, how="intersection")
+            # write to geopackage
+            intersection.to_file(
+                os.path.join(out_path, f"{randint(0, 99999):05d}_{year}_{i}.gpkg"),
+                driver="GPKG",
+                layer="aoi",
+            )
+
+
+# %%
+from shapely.geometry import Point
+
+a = Point(0, 0).intersection(Point(0, 1))
+
+
+# %%
+# use gpd.overlay to check intersection between two polygon geodataframes
+def check_intersection(gdf1, gdf2):
+    """Check if two geodataframes intersect"""
+    # check if gdf1 and gdf2 intersect
+    if gpd.overlay(gdf1, gdf2).empty:
+        return False
+    else:
+        return True
+
+ 
