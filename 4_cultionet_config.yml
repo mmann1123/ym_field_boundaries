@@ -18,4 +18,5 @@ years:
 
 lc_path: !!null
 
-# (venv.cultionet) cultionet create --project-path /home/ubuntu/ym_field_boundaries --grid-size 100 100 --config-file config.yml
+# from bash 
+#cultionet create --project-path /home/ubuntu/training_data --grid-size 100 100 --config-file /home/ubuntu/cultionet/scripts/config.yml  --max-crop-class 1 
