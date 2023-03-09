@@ -40,6 +40,7 @@ for year in ["2022", "2023"]:
 import geopandas as gpd
 from random import randint
 import os
+
 # %%
 # read in _poly_ and _grid_ with multiple features each and export aois as individual geopackages
 os.chdir(
@@ -61,28 +62,40 @@ for year in ["2022", "2023"]:
         # iterate through each grid geometry and find intersection with poly
         for i, row in grid.iterrows():
             # find intersection
-            intersection = gpd.overlay(poly, gpd.GeoDataFrame(geometry=row, crs=grid.crs), how="intersection")
+            intersection = gpd.overlay(
+                poly, gpd.GeoDataFrame(geometry=row, crs=grid.crs), how="intersection"
+            )
             # write to geopackage
-            zone = f'{randint(0, 99999):05d}'
+            zone = f"{randint(0, 99999):05d}"
             intersection.to_file(
                 os.path.join(out_path, f"{zone}_poly_{year}.gpkg"),
                 driver="GPKG",
-                layer="aoi",
+                layer=f"{zone}_poly_{year}",
             )
-            gpd.GeoDataFrame(geometry=row, crs=grid.crs).to_file(
+            poly_out = gpd.GeoDataFrame(geometry=row, crs=grid.crs)
+            poly_out["class"] = 1
+            poly_out.to_file(
                 os.path.join(out_path, f"{zone}_grid_{year}.gpkg"),
                 driver="GPKG",
-                layer="aoi",
+                layer=f"{zone}_poly_{year}",
             )
 
- 
- #%%  add column called "class" with value 1 to all polygons in each geopackage
-import os 
+
+# %%  add column called "class" with value 1 to all polygons in each geopackage
+import os
 import geopandas as gpd
 from glob import glob
 
-os.chdir('/home/ubuntu/training_data/user_train')
-for afile in glob('*.gpkg'):
-    gdf = gpd.read_file(afile, layer='aoi')
-    gdf['class'] = 1
-    gdf.to_file(afile, driver='GPKG' )
+os.chdir("/home/ubuntu/training_data/user_train")
+for afile in glob("*.gpkg"):
+    gdf = gpd.read_file(afile, layer="aoi")
+    gdf["class"] = 1
+    gdf.to_file(afile, driver="GPKG")
+# %%
+
+import geopandas as gpd
+import fiona
+
+gpkg = "/home/mmann1123/Downloads/user_train_usa/000001_grid_2022.gpkg"
+layers = fiona.listlayers(gpkg)
+# %%
