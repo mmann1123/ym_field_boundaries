@@ -76,4 +76,13 @@ for year in ["2022", "2023"]:
             )
 
  
- 
+ #%%  add column called "class" with value 1 to all polygons in each geopackage
+import os 
+import geopandas as gpd
+from glob import glob
+
+os.chdir('/home/ubuntu/training_data/user_train')
+for afile in glob('*.gpkg'):
+    gdf = gpd.read_file(afile, layer='aoi')
+    gdf['class'] = 1
+    gdf.to_file(afile, driver='GPKG', layer='aoi')

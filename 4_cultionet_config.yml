@@ -1,0 +1,21 @@
+image_vis:
+  - evi
+
+# The regions to process (start, end)
+regions:
+  - 0000000000-0000016384
+  - 0000016384-0000000000
+  - 0000016384-0000016384
+
+# End years (i.e., 2020 = 2019 planting/harvest year)
+# 2019 = 2018 CDL
+# 2020 = 2019 CDL
+# 2021 = 2020 CDL
+# 2022 = 2021 CDL
+years:
+  - 2021
+  - 2022
+
+lc_path: !!null
+
+# (venv.cultionet) cultionet create --project-path /home/ubuntu/ym_field_boundaries --grid-size 100 100 --config-file config.yml
