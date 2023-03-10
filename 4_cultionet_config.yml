@@ -2,10 +2,13 @@ image_vis:
   - evi
 
 # The regions to process (start, end)
-regions: !!null
+regions:
+  - 1
+  - 2
+  - 3
 
 # The region file path
-region_id_file: /home/ubuntu/ym_field_boundaries/regions.csv
+region_id_file: !!null#/home/ubuntu/ym_field_boundaries/regions.csv
 
 # End years (i.e., 2020 = 2019 planting/harvest year)
 # 2019 = 2018 CDL
