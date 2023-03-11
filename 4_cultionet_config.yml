@@ -16,8 +16,8 @@ region_id_file: /home/ubuntu/ym_field_boundaries/regions.csv
 # 2021 = 2020 CDL
 # 2022 = 2021 CDL
 years:
-  - 2021
   - 2022
+  - 2023
 
 lc_path: !!null
 
