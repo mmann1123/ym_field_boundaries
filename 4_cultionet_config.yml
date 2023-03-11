@@ -2,13 +2,13 @@ image_vis:
   - evi
 
 # The regions to process (start, end)
-regions:
-  - 1
-  - 2
-  - 3
+regions: !!null
+#   - 1
+#   - 2
+#   - 3
 
 # The region file path
-region_id_file: !!null#/home/ubuntu/ym_field_boundaries/regions.csv
+region_id_file: /home/ubuntu/ym_field_boundaries/regions.csv
 
 # End years (i.e., 2020 = 2019 planting/harvest year)
 # 2019 = 2018 CDL
@@ -20,3 +20,5 @@ years:
   - 2022
 
 lc_path: !!null
+
+#cultionet create --project-path /home/ubuntu/training_data --grid-size 100 100 --config-file /home/ubuntu/cultionet/scripts/config.yml  --max-crop-class 1 --image-date-format %Y%j
