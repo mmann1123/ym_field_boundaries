@@ -91,7 +91,19 @@ for afile in glob("*.gpkg")[0:1]:
     gdf = gpd.read_file(afile )
     gdf["class"] = 1
     gdf.to_crs('epsg:4326').to_file(afile, driver="GPKG")
-    
+
+# %%
+import os
+import geopandas as gpd
+from glob import glob
+
+os.chdir("/home/ubuntu/training_data/user_train")
+for afile in glob("*.geojson"):
+    gdf = gpd.read_file(afile)
+    gdf["class"] = 1
+    gdf.to_file(afile, driver="GeoJSON")
+# %%
+
 # %%
 
 import geopandas as gpd
