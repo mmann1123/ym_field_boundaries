@@ -62,21 +62,21 @@ for year in ["2022", "2023"]:
         # iterate through each grid geometry and find intersection with poly
         for i, row in grid.iterrows():
             # find empty geodataframe
-
-            if row.geometry.is_empty:
-                
-                
-
+            if row.geometry.is_valid == False:
+                intersection = gpd.GeoDataFrame(geometry=row, crs=grid.crs)
+                intersection["class"] = 0
             else:
-
                 # find intersection
                 intersection = gpd.overlay(
-                    poly, gpd.GeoDataFrame(geometry=row, crs=grid.crs), how="intersection"
+                    poly,
+                    gpd.GeoDataFrame(geometry=row, crs=grid.crs),
+                    how="intersection",
                 )
+                intersection["class"] = 1
+
             # write to geopackage
             zone = f"{randint(0, 99999):05d}"
             # add required field
-            intersection["class"] = 1
 
             intersection.to_crs("EPSG:4326")
 
