@@ -17,7 +17,7 @@ years:
 
 lc_path: !!null
 
-#cultionet create --project-path /home/ubuntu/training_data --grid-size 100 100 --config-file /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml  --max-crop-class 1 --image-date-format %Y%j
+#cultionet create 	--project-path /home/ubuntu/training_data --crop-column class --grid-size 100 100 --config-file /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml  --max-crop-class 1 --image-date-format %Y%j
 
 
 # End years (i.e., 2020 = 2019 planting/harvest year)
@@ -25,3 +25,10 @@ lc_path: !!null
 # 2020 = 2019 CDL
 # 2021 = 2020 CDL
 # 2022 = 2021 CDL
+
+
+
+#PROJECT_PATH="/home/ubuntu/training_data"
+#CROP_COLUMN="class"
+
+#cultionet create -p $PROJECT_PATH -gs 100 100 --crop-column $CROP_COLUMN 	--max-crop-class 1 	--feature-pattern {region}/{image_vi} 	--image-date-format %Y%j 	--config-file /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml
