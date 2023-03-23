@@ -85,13 +85,14 @@ for year in ["2022", "2023"]:
 import os
 import geopandas as gpd
 from glob import glob
-
+# !mkdir /home/ubuntu/training_data/user_train/gpkg
 os.chdir("/home/ubuntu/training_data/user_train")
-for afile in glob("*.gpkg")[0:1]:
+for afile in glob("*.geojson"):
+    filename, file_extension = os.path.splitext(afile)
     gdf = gpd.read_file(afile )
     gdf["class"] = 1
-    gdf.to_crs('epsg:4326').to_file(afile, driver="GPKG")
-
+    gdf.to_crs('epsg:4326').to_file(f'{filename}.gpkg', driver="GPKG")
+    
 # %%
 import os
 import geopandas as gpd
