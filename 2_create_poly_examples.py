@@ -61,12 +61,25 @@ for year in ["2022", "2023"]:
         poly = gpd.read_file(os.path.join(in_path, f"{region}_poly_{year}.geojson"))
         # iterate through each grid geometry and find intersection with poly
         for i, row in grid.iterrows():
-            # find intersection
-            intersection = gpd.overlay(
-                poly, gpd.GeoDataFrame(geometry=row, crs=grid.crs), how="intersection"
-            )
+            # find empty geodataframe
+
+            if row.geometry.is_empty:
+                
+                
+
+            else:
+
+                # find intersection
+                intersection = gpd.overlay(
+                    poly, gpd.GeoDataFrame(geometry=row, crs=grid.crs), how="intersection"
+                )
             # write to geopackage
             zone = f"{randint(0, 99999):05d}"
+            # add required field
+            intersection["class"] = 1
+
+            intersection.to_crs("EPSG:4326")
+
             intersection.to_file(
                 os.path.join(out_path, f"{zone}_poly_{year}.gpkg"),
                 driver="GPKG",
@@ -74,42 +87,46 @@ for year in ["2022", "2023"]:
             )
             poly_out = gpd.GeoDataFrame(geometry=row, crs=grid.crs)
             poly_out["class"] = 1
+
+            poly_out.to_crs("EPSG:4326")
+
             poly_out.to_file(
                 os.path.join(out_path, f"{zone}_grid_{year}.gpkg"),
                 driver="GPKG",
-                layer=f"{zone}_poly_{year}",
+                layer=f"{zone}_grid_{year}",
             )
 
 
 # %%  add column called "class" with value 1 to all polygons in each geopackage
-import os
-import geopandas as gpd
-from glob import glob
-# !mkdir /home/ubuntu/training_data/user_train/gpkg
-os.chdir("/home/ubuntu/training_data/user_train")
-for afile in glob("*.geojson"):
-    filename, file_extension = os.path.splitext(afile)
-    gdf = gpd.read_file(afile )
-    gdf["class"] = 1
-    gdf.to_crs('epsg:4326').to_file(f'{filename}.gpkg', driver="GPKG")
-    
-# %%
-import os
-import geopandas as gpd
-from glob import glob
+# import os
+# import geopandas as gpd
+# from glob import glob
 
-os.chdir("/home/ubuntu/training_data/user_train")
-for afile in glob("*.geojson"):
-    gdf = gpd.read_file(afile)
-    gdf["class"] = 1
-    gdf.to_file(afile, driver="GeoJSON")
-# %%
+# # !mkdir /home/ubuntu/training_data/user_train/gpkg
+# os.chdir("/home/ubuntu/training_data/user_train")
+# for afile in glob("*.geojson"):
+#     filename, file_extension = os.path.splitext(afile)
+#     gdf = gpd.read_file(afile)
+#     gdf["class"] = 1
+#     gdf.to_crs("epsg:4326").to_file(f"{filename}.gpkg", driver="GPKG")
 
-# %%
+# # %%
+# import os
+# import geopandas as gpd
+# from glob import glob
 
-import geopandas as gpd
-import fiona
+# os.chdir("/home/ubuntu/training_data/user_train")
+# for afile in glob("*.geojson"):
+#     gdf = gpd.read_file(afile)
+#     gdf["class"] = 1
+#     gdf.to_file(afile, driver="GeoJSON")
+# # %%
 
-gpkg = "/home/mmann1123/Downloads/user_train_usa/000001_grid_2022.gpkg"
-layers = fiona.listlayers(gpkg)
+# # %%
+
+# import geopandas as gpd
+# import fiona
+
+# gpkg = "/home/mmann1123/Downloads/user_train_usa/000001_grid_2022.gpkg"
+# layers = fiona.listlayers(gpkg)
 # %%
