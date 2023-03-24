@@ -65,15 +65,15 @@ grids
 
 #%%
 
-for image_period in image_names[0:1]:
+for image_period in image_names:
 
     with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
                     mosaic=True,chunks=64) as ds: #
         for grid in grids:
-            print('grid: ',grid)
+            print('grid: ',grid,'---------\n')
             grid2 = gpd.read_file(grid) 
             ds2 = ds.gw.clip(grid2)
-            grid_code = re.findall(r'\d{6}', os.path.basename(grid))[-1]
+            grid_code = re.findall(r'\d{1}', os.path.basename(grid))[0]
             out_dir = os.path.join('./training_data/time_series_vars',
                                    grid_code,
                                    'evi')
