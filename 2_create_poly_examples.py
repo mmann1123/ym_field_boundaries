@@ -40,7 +40,7 @@ for year in ["2022", "2023"]:
 
 # %%  BREAK POLY AND GRID INTO INDIVIDUAL FILES WITH 6 DIGIT CODES
 import geopandas as gpd
-from random import randint
+from random import randint, seed
 import os
 
 # %%
@@ -71,10 +71,11 @@ for year in ["2022", "2023"]:
             intersection["class"] = 1
 
             # write to geopackage
+            seed(101)
             zone = f"{randint(0, 99999):06d}"
             # add required field
 
-            intersection.to_crs("EPSG:4326")
+            intersection.to_crs("EPSG:4326", inplace=True)
 
             intersection.to_file(
                 os.path.join(out_path, f"{zone}_poly_{year}.gpkg"),
