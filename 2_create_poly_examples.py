@@ -43,12 +43,12 @@ import geopandas as gpd
 from random import randint, seed
 import os
 
-# %%
+
 # read in _poly_ and _grid_ with multiple features each and export aois as individual geopackages
 os.chdir(os.path.join(main_path, "training_data/user_train/"))
 
 # get region names
-regions = os.listdir("../time_series_vars/")
+regions = os.listdir(r"../../raw_images_S2")
 regions
 # %%
 in_path = os.path.join(os.getcwd(), "multi_feature_by_region")
@@ -71,7 +71,7 @@ for year in ["2022", "2023"]:
             intersection["class"] = 1
 
             # write to geopackage
-            seed(101)
+            seed(101 + i)
             zone = f"{randint(0, 99999):06d}"
             # add required field
 
