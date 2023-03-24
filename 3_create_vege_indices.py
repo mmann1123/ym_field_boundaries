@@ -2,7 +2,8 @@
 import geowombat as gw
 from glob import glob
 import os
-os.chdir('/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/raw_images_S2')
+# os.chdir('/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/raw_images_S2') # desktop
+os.chdir(r'/home/mmann1123/Dropbox/TZ_field_boundaries/raw_images_S2') # laptop
 files = glob('**/**.tif', recursive=True)
 files
 
@@ -48,7 +49,7 @@ image_folders
 image_names = list(set([os.path.basename(x) for x in evi_imgs]) )
 image_names
 
-grids = glob(r'../user_train/single_feature_by_id/*.gpkg')
+grids = glob(r'../user_train/single_feature_by_id/*grid*.gpkg')
 grids
 
 #%%
