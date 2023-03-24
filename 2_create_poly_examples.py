@@ -4,13 +4,15 @@
 # !pip install -e randombox
 # %%
 from randombox import random_box
+
+# %%
 import glob as glob
 import os
 
+main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries"  # desktop /home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/
+main_path
 # %%
-os.chdir(
-    "/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/time_series_vars/"
-)
+os.chdir(os.path.join(main_path, "training_data/time_series_vars/"))
 directory_list = os.listdir()
 directory_list
 
@@ -43,14 +45,12 @@ import os
 
 # %%
 # read in _poly_ and _grid_ with multiple features each and export aois as individual geopackages
-os.chdir(
-    "/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/user_train/"
-)
-# get region names
-regions = os.listdir(
-    "/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training_data/time_series_vars/"
-)
+os.chdir(os.path.join(main_path, "training_data/user_train/"))
 
+# get region names
+regions = os.listdir("../time_series_vars/")
+regions
+# %%
 in_path = os.path.join(os.getcwd(), "multi_feature_by_region")
 out_path = os.path.join(os.getcwd(), "single_feature_by_id")
 
@@ -62,17 +62,19 @@ for year in ["2022", "2023"]:
         # iterate through each grid geometry and find intersection with poly
         for i, row in grid.iterrows():
             # find empty geodataframe
-            if row.geometry.is_valid == False:
-                intersection = gpd.GeoDataFrame(geometry=row, crs=grid.crs)
-                intersection["class"] = 0
-            else:
-                # find intersection
-                intersection = gpd.overlay(
-                    poly,
-                    gpd.GeoDataFrame(geometry=row, crs=grid.crs),
-                    how="intersection",
-                )
-                intersection["class"] = 1
+            # if row.geometry.is_valid == False:
+            #     intersection = gpd.GeoDataFrame(geometry=row, crs=grid.crs)
+            #     intersection["class"] = 0
+            # else:
+
+            # find intersection
+            intersection = gpd.overlay(
+                poly,
+                gpd.GeoDataFrame(geometry=[row.geometry], crs=grid.crs),
+                how="intersection",
+                keep_geom_type=False,
+            )
+            intersection["class"] = 1
 
             # write to geopackage
             zone = f"{randint(0, 99999):05d}"
@@ -85,7 +87,7 @@ for year in ["2022", "2023"]:
                 driver="GPKG",
                 layer=f"{zone}_poly_{year}",
             )
-            poly_out = gpd.GeoDataFrame(geometry=row, crs=grid.crs)
+            poly_out = gpd.GeoDataFrame(geometry=[row.geometry], crs=grid.crs)
             poly_out["class"] = 1
 
             poly_out.to_crs("EPSG:4326")
