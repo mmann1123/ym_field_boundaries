@@ -67,7 +67,7 @@ for year in ["2022", "2023"]:
             grid = gpd.read_file(os.path.join(in_path, f"{region}_grid_{year}.geojson"))
             poly = gpd.read_file(os.path.join(in_path, f"{region}_poly_{year}.geojson"))
         except:
-            next
+            continue
         # iterate through each grid geometry and find intersection with poly
         for i, row in grid.iterrows():
             # find intersection
@@ -88,7 +88,7 @@ for year in ["2022", "2023"]:
             intersection.to_crs("EPSG:4326", inplace=True)
 
             intersection.to_file(
-                os.path.join(out_path, f"{zone}_poly_{year}.gpkg"),
+                os.path.join(out_path, f"{zone:06d}_poly_{year}.gpkg"),
                 driver="GPKG",
                 layer=f"{zone}_poly_{year}",
             )
@@ -98,7 +98,7 @@ for year in ["2022", "2023"]:
             poly_out.to_crs("EPSG:4326")
 
             poly_out.to_file(
-                os.path.join(out_path, f"{zone}_grid_{year}.gpkg"),
+                os.path.join(out_path, f"{zone:06d}_grid_{year}.gpkg"),
                 driver="GPKG",
                 layer=f"{zone}_grid_{year}",
             )
