@@ -160,5 +160,4 @@ pip install --user cultionet@git+https://github.com/jgrss/cultionet.git
 git clone https://github.com/jgrss/cultionet.git
 pip install testfixtures pytest
 cd cultionet/tests
-pytest -vv
 
