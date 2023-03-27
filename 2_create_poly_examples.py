@@ -43,6 +43,7 @@ import geopandas as gpd
 from random import randint, seed
 import os
 
+main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries"  # desktop /home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/
 
 # read in _poly_ and _grid_ with multiple features each and export aois as individual geopackages
 os.chdir(os.path.join(main_path, "training_data/user_train/"))
@@ -54,6 +55,7 @@ regions
 in_path = os.path.join(os.getcwd(), "multi_feature_by_region")
 out_path = os.path.join(os.getcwd(), "single_feature_by_id")
 
+i = 1
 # read in _poly_ and _grid_ files, find intersection between individual _grid_ and _poly_, export aois as individual geopackages
 for year in ["2022", "2023"]:
     for region in regions:
@@ -68,13 +70,15 @@ for year in ["2022", "2023"]:
                 how="intersection",
                 keep_geom_type=False,
             )
+            # add required field
             intersection["class"] = 1
 
-            # write to geopackage
-            seed(101 + i)
-            zone = f"{randint(0, 99999):06d}"
-            # add required field
+            zone = i
+            i += 1
 
+            # write to geopackage
+            # seed(101 + i)
+            # zone = f"{randint(0, 99999):06d}"
             intersection.to_crs("EPSG:4326", inplace=True)
 
             intersection.to_file(
