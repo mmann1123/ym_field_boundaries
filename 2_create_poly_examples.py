@@ -95,7 +95,7 @@ for year in ["2022", "2023"]:
             poly_out = gpd.GeoDataFrame(geometry=[row.geometry], crs=grid.crs)
             poly_out["class"] = 1
 
-            poly_out.to_crs("EPSG:4326")
+            poly_out.to_crs("EPSG:4326", inplace=True)
 
             poly_out.to_file(
                 os.path.join(out_path, f"{zone:06d}_grid_{year}.gpkg"),
