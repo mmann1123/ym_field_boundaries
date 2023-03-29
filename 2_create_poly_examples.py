@@ -10,8 +10,9 @@ import glob as glob
 import os
 
 main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries"  # desktop /home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/
+main_path = r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/"
 main_path
-# %%
+
 os.chdir(os.path.join(main_path, "training_data/time_series_vars/"))
 directory_list = os.listdir()
 directory_list
@@ -43,7 +44,8 @@ import geopandas as gpd
 from random import randint, seed
 import os
 
-main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries"  # desktop /home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/
+main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries"  # desktop
+main_path = r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/"
 
 # read in _poly_ and _grid_ with multiple features each and export aois as individual geopackages
 os.chdir(os.path.join(main_path, "training_data/user_train/"))
@@ -51,16 +53,21 @@ os.chdir(os.path.join(main_path, "training_data/user_train/"))
 # get region names
 regions = os.listdir(r"../../raw_images_S2")
 regions
+
 # %%
+
 in_path = os.path.join(os.getcwd(), "multi_feature_by_region")
 out_path = os.path.join(os.getcwd(), "single_feature_by_id")
 
-i = 1
+zone = 1
 # read in _poly_ and _grid_ files, find intersection between individual _grid_ and _poly_, export aois as individual geopackages
 for year in ["2022", "2023"]:
     for region in regions:
-        grid = gpd.read_file(os.path.join(in_path, f"{region}_grid_{year}.geojson"))
-        poly = gpd.read_file(os.path.join(in_path, f"{region}_poly_{year}.geojson"))
+        try:
+            grid = gpd.read_file(os.path.join(in_path, f"{region}_grid_{year}.geojson"))
+            poly = gpd.read_file(os.path.join(in_path, f"{region}_poly_{year}.geojson"))
+        except:
+            continue
         # iterate through each grid geometry and find intersection with poly
         for i, row in grid.iterrows():
             # find intersection
@@ -73,8 +80,7 @@ for year in ["2022", "2023"]:
             # add required field
             intersection["class"] = 1
 
-            zone = i
-            i += 1
+            zone += 1
 
             # write to geopackage
             # seed(101 + i)
@@ -82,17 +88,17 @@ for year in ["2022", "2023"]:
             intersection.to_crs("EPSG:4326", inplace=True)
 
             intersection.to_file(
-                os.path.join(out_path, f"{zone}_poly_{year}.gpkg"),
+                os.path.join(out_path, f"{zone:06d}_poly_{year}.gpkg"),
                 driver="GPKG",
                 layer=f"{zone}_poly_{year}",
             )
             poly_out = gpd.GeoDataFrame(geometry=[row.geometry], crs=grid.crs)
             poly_out["class"] = 1
 
-            poly_out.to_crs("EPSG:4326")
+            poly_out.to_crs("EPSG:4326", inplace=True)
 
             poly_out.to_file(
-                os.path.join(out_path, f"{zone}_grid_{year}.gpkg"),
+                os.path.join(out_path, f"{zone:06d}_grid_{year}.gpkg"),
                 driver="GPKG",
                 layer=f"{zone}_grid_{year}",
             )

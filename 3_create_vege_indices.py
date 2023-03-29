@@ -45,42 +45,67 @@ import geopandas as gpd
 import re
 from glob import glob
 
-# os.chdir('/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/raw_images_S2') # desktop
-os.chdir(r'/home/mmann1123/Dropbox/TZ_field_boundaries/') # laptop
+os.chdir('/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries') # desktop
+# os.chdir(r'/home/mmann1123/Dropbox/TZ_field_boundaries/') # laptop
 
 
-evi_imgs = glob('./training_data/time_series_vars/*/evi/*.tif', recursive=True)
+evi_imgs = glob('./raw_images_S2/*/*.tif', recursive=True)
 evi_imgs
 
 image_folders = list(set([os.path.dirname(x) for x in evi_imgs]))
 image_folders
 
-image_names = list(set([os.path.basename(x) for x in evi_imgs]) )
-image_names
+image_periods = list(set([os.path.basename(x) for x in evi_imgs]) )
+image_periods
 
 grids = glob(r'./training_data/user_train/single_feature_by_id/*grid*.gpkg')
 grids
 
-
+out_path ='./training_data/time_series_vars'
 
 #%%
+import matplotlib.pyplot as plt
 
-for image_period in image_names:
+for image_period in image_periods:
+    with gw.config.update(sensor='bgrn', ):
+        with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
+                    mosaic=True ,
+                    overlap="max",
+                    bounds_by="union",
+                    chunks=1024) as ds: 
+            evi = ds.gw.evi(scale_factor =1).compute(workers=8 )
+            evi2 = evi.gw.match_data(ds,['evi'])
+            os.makedirs('./mosaic/evi',exist_ok=True)
+            print('writing: ',os.path.join('./mosaic/evi',image_period))
+            evi2.gw.save(
+                    os.path.join('./mosaic/evi',image_period), 
+                    overwrite=True,
+                    num_workers=8 )
 
-    with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
-                    mosaic=True,chunks=64) as ds: #
-        for grid in grids:
-            print('grid: ',grid,'---------\n')
-            grid2 = gpd.read_file(grid) 
-            ds2 = ds.gw.clip(grid2)
-            grid_code = re.findall(r'\d{1}', os.path.basename(grid))[0]
-            out_dir = os.path.join('./training_data/time_series_vars',
-                                   grid_code,
-                                   'evi')
-            os.makedirs(out_dir,exist_ok=True)
-            print(os.path.join(out_dir,image_period))
-            ds2.gw.to_raster(os.path.join(out_dir,image_period),overwrite=True)
-            
+    #subset grids list to year 
+    year_grids = [x for x in grids if re.findall(r'\d{4}', image_period)[0] in x]
+        
+    for grid in year_grids:
+        print('grid: ',grid,'---------\n')
+
+        # clip with ref bounds instead of clip (bug)
+        grid2 = gpd.read_file(grid) 
+        with gw.config.update(ref_bounds=grid2.total_bounds.tolist()):
+            with gw.open(
+                os.path.join('./mosaic/evi',image_period),
+                chunks=1024, ) as ds_evi:
+
+                #ds2 = ds_evi.gw.clip(grid2)
+                # ds2.gw.imshow(robust=True, ax=ax)
+                grid_code = re.findall(r'\d{6}', os.path.basename(grid))[0]
+                out_dir = os.path.join(out_path,
+                                    grid_code,
+                                    'evi')
+                os.makedirs(out_dir,exist_ok=True)
+                print(os.path.join(out_dir,image_period))
+                ds_evi.gw.to_raster(os.path.join(out_dir,image_period),overwrite=True)
+    
+
 
 # %%
  
