@@ -1,0 +1,1 @@
+cultionet create 	--project-path /home/ubuntu/training_data --crop-column class --grid-size 100 100 --config-file /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml  --max-crop-class 1 --image-date-format %Y%j
