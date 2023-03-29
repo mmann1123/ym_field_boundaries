@@ -70,12 +70,13 @@ for image_period in image_periods:
     with gw.config.update(sensor='bgrn', ):
         with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
                     mosaic=True ,
-                    overlap="mean",
+                    overlap="max",
                     bounds_by="union",
                     chunks=1024) as ds: 
             evi = ds.gw.evi(scale_factor =1).compute(workers=8 )
             evi2 = evi.gw.match_data(ds,['evi'])
             os.makedirs('./mosaic/evi',exist_ok=True)
+            print('writing: ',os.path.join('./mosaic/evi',image_period))
             evi2.gw.save(
                     os.path.join('./mosaic/evi',image_period), 
                     overwrite=True,
