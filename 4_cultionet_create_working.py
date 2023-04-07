@@ -1,5 +1,6 @@
 # %%
 
+
 import shutil
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from cultionet.utils.project_paths import setup_paths
 
 p = Path("/home/ubuntu/training_data")
 # p = Path("/home/ubuntu/cultionet/tests/data")
-CONFIG = open_config(p / "config.yml")
+CONFIG = open_config("/home/ubuntu/ym_field_boundaries/4_cultionet_config.yml")
 END_YEAR = CONFIG["years"][-1]
 REGION = f"{CONFIG['regions'][-1]:06d}"
 
@@ -73,3 +74,5 @@ def test_predict_dataset():
 
 # creates the .pt files in current directory
 test_predict_dataset()
+
+# %%

@@ -4,7 +4,7 @@ image_vis:
 # The regions to process (start, end)
 regions:  
   - 000002
-  - 000003
+  - 000031
  
 
 # The region file path
@@ -20,8 +20,8 @@ years:
 # Start and end date for prediction
 # Set as !!null to use dates from filenames. However, it is recommended
 # to set these dates to avoid unexpected date inclusions.
-# start_date: 01-01
-# end_date: 12-30
+start_date: 01-01
+end_date: 12-30
 
 lc_path: !!null
 
