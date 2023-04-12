@@ -3,7 +3,7 @@ image_vis:
 
 # The regions to process (start, end)
 regions:  
-  - 000002
+  - 000001
   - 000031
  
 
@@ -14,14 +14,14 @@ region_id_file: !!null
 
 years:
   - 2022
-  - 2023
+  - 2022
 
-# predict_year: 2021
+predict_year: 2022
 # Start and end date for prediction
 # Set as !!null to use dates from filenames. However, it is recommended
 # to set these dates to avoid unexpected date inclusions.
-start_date: 01-01
-end_date: 12-30
+start_date: 05-01
+end_date: 05-01
 
 lc_path: !!null
 

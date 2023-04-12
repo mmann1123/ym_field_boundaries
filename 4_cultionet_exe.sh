@@ -1,1 +1,23 @@
-cultionet create  --res 0.00008983152841195214829 --project-path /home/ubuntu/training_data --crop-column class --grid-size 100 100 --config-file /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml  --max-crop-class 1 --image-date-format %Y%j
+
+# old cultionet create  --res 0.00008983152841195214829 --project-path /home/ubuntu/training_data --crop-column class --grid-size 100 100 --config-file /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml  --max-crop-class 1 --image-date-format %Y%j
+
+cd /home/ubuntu/training_data
+ln -s training_data/time_series_vars time_series_vars
+ln -s training_data/user_train user_train
+
+cp /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml /home/ubuntu/training_data/config.yml
+
+cultionet create \
+        --res 0.00008983152841195214829 \
+        --project-path . \
+        --config-file config.yml \
+        --crop-column class \
+        --grid-size 99 99 \
+        --max-crop-class 1 \
+        --image-date-format %Y%j \
+        --feature-pattern {region}/{image_vi} \
+        --start-date 05-01 \
+        --end-date 05-01
+
+
+ 
