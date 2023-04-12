@@ -15,8 +15,8 @@ echo "conda activate pytorch" >> ~/.bashrc
 source ~/.bashrc
 
 # set up git
-git config --global user.name ""
-git config --global  user.email ""
+git config --global user.name "mmann1123"
+git config --global  user.email "mmann1123@gmail.com"
 
 
 sudo apt update -y && \
@@ -82,5 +82,5 @@ cd cultionet/tests
 pytest -vv
 
 # mount flexible storage
-mkdir efs -p
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-064b6369b27fcf25f.efs.us-east-1.amazonaws.com:/ efs
+# mkdir efs -p
+# sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-064b6369b27fcf25f.efs.us-east-1.amazonaws.com:/ efs
