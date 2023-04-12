@@ -11,6 +11,8 @@ Host aws_mann_cultionet
 
 # one first setup
 #conda config --set auto_activate_base false
+conda init bash
+source ~/.profile
 echo "conda activate pytorch" >> ~/.bashrc
 source ~/.bashrc
 
@@ -56,12 +58,13 @@ pip install -U pip setuptools wheel
 pip install -U --no-cache-dir "setuptools<=58.*"
 pip install -U --no-cache-dir cython>=0.29.*
 pip install -U --no-cache-dir "numpy>=1.21.0,<1.24"
+pip install intel-openmp
 
 # Install PyTorch Geometric and its dependencies
 pip install \
     torch \
     torchvision \
-    torchaudio --extra-index-url https://download.pytorch.org/whl/cu117
+    torchaudio  
 
 TORCH_VERSION=`(python -c "import torch;print(torch.__version__)")` &&
     pip install \
