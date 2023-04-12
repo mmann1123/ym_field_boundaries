@@ -7,7 +7,9 @@ ln -s training_data/user_train user_train
 
 cp /home/ubuntu/ym_field_boundaries/4_cultionet_config.yml /home/ubuntu/training_data/config.yml
 
+
 cultionet create \
+        --transforms {fliplr,flipud,rot90,rot180,rot270,tswarp,tsnoise,tsdrift,roll,gaussian,saltpepper,speckle} \
         --res 0.00008983152841195214829 \
         --project-path . \
         --config-file config.yml \
@@ -19,5 +21,15 @@ cultionet create \
         --start-date 05-01 \
         --end-date 05-01
 
-
+cultionet train --project-path . \
+                --val-frac 0.2 \
+                --random-seed 500 \
+                --batch-size 4 \
+                --epochs 30 \
+                --filters 32 \
+                --device gpu \
+                --patience 5 \
+                --learning-rate 0.001 \
+                --reset-model
  
+

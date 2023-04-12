@@ -3,7 +3,7 @@ image_vis:
 
 # The regions to process (start, end)
 regions:  
-  - 000001
+  - 000002
   - 000031
  
 
