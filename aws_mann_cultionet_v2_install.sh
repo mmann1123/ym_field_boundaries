@@ -81,6 +81,7 @@ GDAL_VERSION=$(gdal-config --version | awk -F'[.]' '{print $1"."$2"."$3}') && \
 pip install --user cultionet@git+https://github.com/jgrss/cultionet.git
 git clone https://github.com/jgrss/cultionet.git
 pip install testfixtures
+sudo apt install python-pytest -y
 cd cultionet/tests
 pytest -vv
 
