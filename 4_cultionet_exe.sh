@@ -22,8 +22,8 @@ cultionet create \
         --end-date 05-01
 cultionet train --project-path . \
                 --expected-dim 4 \
-                --expected-height 100 \
-                --expected-width 100 \
+                --expected-height 99 \
+                --expected-width 99 \
                 --delete-mismatches \
                 --recalc-zscores\
                 --val-frac 0.2 \
