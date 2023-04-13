@@ -20,8 +20,12 @@ cultionet create \
         --feature-pattern {region}/{image_vi} \
         --start-date 05-01 \
         --end-date 05-01
-
 cultionet train --project-path . \
+                --expected-dim 4 \
+                --expected-height 100 \
+                --expected-width 100 \
+                --delete-mismatches \
+                --recalc-zscores\
                 --val-frac 0.2 \
                 --random-seed 500 \
                 --batch-size 4 \
