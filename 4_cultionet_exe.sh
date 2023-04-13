@@ -20,6 +20,8 @@ cultionet create \
         --feature-pattern {region}/{image_vi} \
         --start-date 05-01 \
         --end-date 05-01
+        
+        
 cultionet train --project-path . \
                 --expected-dim 4 \
                 --expected-height 99 \
