@@ -1,9 +1,12 @@
+# DOESN'T WORK!!!!!!!!! ARGH!!!!
+
+
 # Ubuntu Linux 20.04
 # AMI Deep learning AMI GPU PyTorch 1.13.1
 # G3 instance but  P3, P3dn, P4d, G5, G4dn also work
 
 # vs code ssh profile 
-Host aws_mann_cultionet
+Host aws_mann_cultionet_v2
     HostName something.compute-1.amazonaws.com
     User ubuntu
     IdentityFile  
