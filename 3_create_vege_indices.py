@@ -71,6 +71,7 @@ os.makedirs(out_path_mosaic,exist_ok=True)
 #%%
 
 for image_period in image_periods:
+    print('image period: ',image_period,'---------\n')
     with gw.config.update(sensor='bgrn'  ):
         with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
                     mosaic=True ,
@@ -93,13 +94,17 @@ for image_period in image_periods:
 
         # clip with ref bounds instead of clip (bug)
         grid2 = gpd.read_file(grid) 
-        with gw.config.update(ref_bounds=grid2.total_bounds.tolist()):
+
+        # buffer grid by 3m to avoid edge effects
+        expand = 8.983152841195215e-05 *0.25
+        with gw.config.update(ref_bounds=grid2.buffer(expand).total_bounds.tolist()):
             with gw.open(
                 os.path.join(out_path_mosaic,image_period),
                 chunks=1024, ) as ds_evi:
 
                 #ds2 = ds_evi.gw.clip(grid2)
-                # ds2.gw.imshow(robust=True, ax=ax)
+                assert ds_evi.compute().shape == (1, 100, 100)
+                
                 grid_code = re.findall(r'\d{6}', os.path.basename(grid))[0]
                 out_dir = os.path.join(out_path_tile,
                                     grid_code,
@@ -108,7 +113,7 @@ for image_period in image_periods:
                 print(os.path.join(out_dir,image_period))
                 ds_evi.gw.to_raster(os.path.join(out_dir,image_period),overwrite=True)
     
-
+             
 
 # # %% reproject all images 
 
@@ -181,3 +186,5 @@ for image_period in image_periods:
 #                 print(os.path.join(out_dir,image_period))
 #                 ds_evi.gw.to_raster(os.path.join(out_dir,image_period),overwrite=True)
     
+
+# %%
