@@ -72,7 +72,7 @@ os.makedirs(out_path_mosaic,exist_ok=True)
 #%%
 for image_period in image_periods:
     print('image period: ',image_period,'---------\n')
-    with gw.config.update(sensor='bgrn',ref_crs='EPSG:32736'  ):
+    with gw.config.update(sensor='bgrn' ):
         with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
                     mosaic=True ,
                     overlap="max",
@@ -93,7 +93,7 @@ for image_period in image_periods:
         print('grid: ',grid,'---------\n')
 
         # clip with ref bounds instead of clip (bug)
-        grid2 = gpd.read_file(grid).to_crs('EPSG:32736') 
+        grid2 = gpd.read_file(grid)
 
         # buffer grid by 3m to avoid edge effects
         expand = 8.983152841195215e-05 *0.25
