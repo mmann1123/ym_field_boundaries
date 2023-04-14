@@ -11,6 +11,9 @@ from helpers import *
 from ipygee import *
 import ipygee as ui
 
+
+# ee.Authenticate()
+
 ee.Initialize()
 import geetools
 from geetools import ui, cloud_mask, batch
