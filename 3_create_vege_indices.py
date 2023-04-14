@@ -68,11 +68,11 @@ out_path_mosaic = './mosaic/evi'
 os.makedirs(out_path_tile,exist_ok=True)
 os.makedirs(out_path_mosaic,exist_ok=True)
 
+ 
 #%%
-
 for image_period in image_periods:
     print('image period: ',image_period,'---------\n')
-    with gw.config.update(sensor='bgrn'  ):
+    with gw.config.update(sensor='bgrn',ref_crs='EPSG:32736'  ):
         with gw.open([os.path.join(folder, image_period) for folder in image_folders], 
                     mosaic=True ,
                     overlap="max",
@@ -93,7 +93,7 @@ for image_period in image_periods:
         print('grid: ',grid,'---------\n')
 
         # clip with ref bounds instead of clip (bug)
-        grid2 = gpd.read_file(grid) 
+        grid2 = gpd.read_file(grid).to_crs('EPSG:32736') 
 
         # buffer grid by 3m to avoid edge effects
         expand = 8.983152841195215e-05 *0.25

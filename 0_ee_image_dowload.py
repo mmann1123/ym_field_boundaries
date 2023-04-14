@@ -1,5 +1,5 @@
 # use geepy environment, run earthengine authenticate in commandline first
-#%%
+# %%
 # requires https://cloud.google.com/sdk/docs/install
 # and https://developers.google.com/earth-engine/guides/python_install-conda
 
@@ -38,13 +38,14 @@ region = site
 # extra = dict(sat="Sen_TOA")
 CLOUD_FILTER = 75
 
+# # export clipped result in Tiff
+crs = "EPSG:3857"
 
-#%% QUARTERLY COMPOSITES
+# %% QUARTERLY COMPOSITES
 
 q_finished = []
 for year in list(range(2021, 2023)):
     for month in list(range(1, 13)):
-
         dt = pendulum.datetime(year, month, 1)
         # avoid repeating same quarter
         yq = f"{year}_{dt.quarter}"
@@ -73,23 +74,20 @@ for year in list(range(2021, 2023)):
         s2_sr = geetools.batch.utils.convertDataType("uint32")(s2_sr)
         # eprint(s2_sr)
 
-        # # export clipped result in Tiff
-        crs = "EPSG:4326"
-
         img_name = f"S2_SR_{year}_Q{str(dt.quarter).zfill(2)}"
         export_config = {
             "scale": scale,
             "maxPixels": 50000000000,
             "driveFolder": folder,
             "region": site,
+            "crs": crs,
         }
         task = ee.batch.Export.image(s2_sr, img_name, export_config)
         task.start()
 
-#%% MONTHLY COMPOSITES
+# %% MONTHLY COMPOSITES
 for year in list(range(2021, 2023)):
     for month in list(range(1, 13, 4)):
-
         print("year ", str(year), " month ", str(month))
         dt = pendulum.datetime(year, month, 1)
 
@@ -118,6 +116,7 @@ for year in list(range(2021, 2023)):
             "maxPixels": 5000000000,
             "driveFolder": folder,
             "region": site,
+            "crs": crs,
         }
         task = ee.batch.Export.image(s2_sr, img_name, export_config)
         task.start()
@@ -158,7 +157,7 @@ for year in list(range(2021, 2023)):
 #     )
 #     print("done")
 
-#%%
+# %%
 # modis = ee.ImageCollection("MODIS/061/MOD13Q1")
 # imagecol = (
 #     ee.ImageCollection("MODIS/061/MOD13Q1")
@@ -192,7 +191,7 @@ for year in list(range(2021, 2023)):
 # MapMOD.addLayer(i_masked, visMOD, "Masked MODIS")
 
 
-#%%
+# %%
 
 # import pendulum
 # import ee
@@ -248,7 +247,7 @@ for year in list(range(2021, 2023)):
 #         eprint(collection)
 
 
-#%%
+# %%
 
 #         geepy.get_sentinel(
 #             product="COPERNICUS/S2",
@@ -300,7 +299,7 @@ for year in list(range(2021, 2023)):
 #     dataType="float",
 #     verbose=True,
 # )
-#%%
+# %%
 
 # bands = ["B2", "B3", "B4"]
 # scale = 30
