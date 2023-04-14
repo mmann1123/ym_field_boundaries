@@ -76,8 +76,8 @@ for year in list(range(2021, 2023)):
         )
         s2_sr = geetools.batch.utils.convertDataType("uint32")(s2_sr)
         # eprint(s2_sr)
-
-        img_name = f"S2_SR_{year}_Q{str(dt.quarter).zfill(2)}"
+        doy = str(dt.last_of("quarter").day_of_year)
+        img_name = f"S2_SR_{year}_{doy}"
         export_config = {
             "scale": scale,
             "maxPixels": 50000000000,
