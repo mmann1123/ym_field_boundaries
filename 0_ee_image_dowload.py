@@ -21,7 +21,7 @@ from geetools import ui, cloud_mask, batch
 
 # ## Get image bounds
 bbox = gpd.read_file(
-    r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/train2/bounds/mwanza.gpkg"
+    r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training2/bounds/mwanza.gpkg"
 ).total_bounds
 
 
@@ -88,6 +88,7 @@ for year in list(range(2021, 2023)):
             .map(addEVI)
             .select(["EVI"])
             .median()
+            .multiply(10000)
         )
 
         s2_sr = geetools.batch.utils.convertDataType("uint32")(s2_sr)
