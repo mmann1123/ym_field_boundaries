@@ -10,24 +10,23 @@ import ee
 from helpers import *
 from ipygee import *
 import ipygee as ui
+import geopandas as gpd
 
-
-# ee.Authenticate()
+# ee.Authenticate() # rerun if token expires
 
 ee.Initialize()
 import geetools
 from geetools import ui, cloud_mask, batch
 
 
-# ## Define an ImageCollection
+# ## Get image bounds
+bbox = gpd.read_file(
+    r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/train2/bounds/mwanza.gpkg"
+).total_bounds
+
+
 site = ee.Geometry.Polygon(
-    [
-        [34.291442183768666, -6.361841661400507],
-        [36.543639449393666, -6.361841661400507],
-        [36.543639449393666, -4.07537105824348],
-        [34.291442183768666, -4.07537105824348],
-        [34.291442183768666, -6.361841661400507],
-    ]
+    [[bbox[0], bbox[1]], [bbox[2], bbox[1]], [bbox[2], bbox[3]], [bbox[0], bbox[3]]]
 )
 
 
@@ -45,6 +44,20 @@ CLOUD_FILTER = 75
 crs = "EPSG:3857"
 
 # %% QUARTERLY COMPOSITES
+
+
+def addEVI(image):
+    EVI = image.expression(
+        "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))",
+        {
+            "NIR": image.select("B8").divide(10000),
+            "RED": image.select("B4").divide(10000),
+            "BLUE": image.select("B2").divide(10000),
+        },
+    ).rename("EVI")
+
+    return image.addBands(EVI)
+
 
 q_finished = []
 for year in list(range(2021, 2023)):
@@ -72,12 +85,15 @@ for year in list(range(2021, 2023)):
             collection.map(add_cld_shdw_mask)
             .map(apply_cld_shdw_mask)
             .select(bands)
+            .map(addEVI)
+            .select(["EVI"])
             .median()
         )
+
         s2_sr = geetools.batch.utils.convertDataType("uint32")(s2_sr)
         # eprint(s2_sr)
         doy = str(dt.last_of("quarter").day_of_year)
-        img_name = f"S2_SR_{year}_{doy}"
+        img_name = f"S2_SR_EVI_{year}_{doy}"
         export_config = {
             "scale": scale,
             "maxPixels": 50000000000,
@@ -87,6 +103,7 @@ for year in list(range(2021, 2023)):
         }
         task = ee.batch.Export.image(s2_sr, img_name, export_config)
         task.start()
+
 
 # %% MONTHLY COMPOSITES
 for year in list(range(2021, 2023)):
