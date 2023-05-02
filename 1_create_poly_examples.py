@@ -2,6 +2,8 @@
 #!pip install git+https://github.com/mmann1123/randombox.git
 # !git clone https://github.com/mmann1123/randombox.git
 # !pip install -e randombox
+
+# gee environment
 # %%
 from randombox import random_box
 
@@ -9,11 +11,11 @@ from randombox import random_box
 import glob as glob
 import os
 
-main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries"  # desktop /home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/
-main_path = r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/"
+# main_path = r"/home/mmann1123/Dropbox/TZ_field_boundaries/training2"  # desktop /home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/
+main_path = r"/home/mmann1123/extra_space/Dropbox/TZ_field_boundaries/training2"
 main_path
 
-os.chdir(os.path.join(main_path, "training_data/time_series_vars/"))
+os.chdir(os.path.join(main_path, "time_series_vars/"))
 directory_list = os.listdir()
 directory_list
 
@@ -22,9 +24,19 @@ directory_list
 
 # 2021 data polygon labeled at end of crop season so 2022 (see cultionet docs)
 # also 2022 data (labeled 2023)
-for year in ["2022", "2023"]:
+import rasterio as rio
+
+with rio.open("../raw_images_S2/2021181.tif") as src:
+    crs = src.crs.to_epsg()
+
+os.mkdir(
+    os.path.join(os.path.dirname(os.getcwd()), "user_train", "single_feature_by_id")
+)
+
+# one set of locations should be used for all years
+for year in ["2022"]:
     for directory in directory_list:
-        geo_path = os.path.join(directory, "evi", "2021091.tif")
+        geo_path = os.path.join(directory, "2021181.tif")
 
         num_points = 10
         size = 1000
@@ -33,15 +45,54 @@ for year in ["2022", "2023"]:
             num_points,
             size,
             out_dir=os.path.join(
-                os.path.dirname(os.getcwd()), "user_train_dummy_to avoid overwrite"
+                os.path.dirname(os.getcwd()), "user_train", "single_feature_by_id"
             ),
             name_prefix=directory,
             name_postfix=year,
-            crs="EPSG:3395",
+            crs=f"EPSG:{crs}",
         )
-# ####################################################
-# NOTE these must be edited manually to drwaw polygons around fields.
 
+
+# ####################################################
+# NOTE make duplicates of the boxes for each year,
+# clip the image to the training boxes
+# these must be edited manually to drwaw polygons around fields.
+
+# %% Mask image to isolate training boxes
+import geowombat as gw
+
+os.chdir(
+    os.path.join(
+        main_path,
+    )
+)
+grids = glob(r"./training_data/user_train/single_feature_by_id/*grid*.geojson")
+print(grids)
+
+images = glob("raw_images_S2/*.tif")
+print(images)
+# %%
+for image in images:
+    for grid in grids[0:1]:  # grid should be same across years
+        print("grid: ", grid, "---------\n")
+
+        # clip with ref bounds instead of clip (bug)
+        # buffer grid by 3m to avoid edge effects
+        grid = gpd.read_file(grid).buffer(10 * 0.25)
+
+        with gw.open(
+            image,
+            chunks=32,
+        ) as ds_evi:
+            ds_evi = ds_evi.gw.mask(grid)
+            ds_evi = ds_evi.where(src != 0)
+
+            out_dir = os.path.join(r"./training_data/user_train", "masked_images")
+            os.makedirs(out_dir, exist_ok=True)
+            print(os.path.join(out_dir, image))
+            ds_evi.gw.to_raster(
+                os.path.join(out_dir, os.path.basename(image)), overwrite=True
+            )
 
 # %%  BREAK POLY AND GRID INTO INDIVIDUAL FILES WITH 6 DIGIT CODES
 import geopandas as gpd
